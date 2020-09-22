@@ -1,0 +1,30 @@
+[InstallShield Silent]
+Version=v7.00
+File=Response File
+[File Transfer]
+OverwrittenReadOnly=NoToAll
+[{6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-DlgOrder]
+Dlg0={6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdWelcome-0
+Count=5
+Dlg1={6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdLicense-0
+Dlg2={6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdAskDestPath2-0
+Dlg3={6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdStartCopy-0
+Dlg4={6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdFinish-0
+[{6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdWelcome-0]
+Result=1
+[{6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdLicense-0]
+Result=1
+[{6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdAskDestPath2-0]
+szDir=C:\Users\Public\Documents\ccdata\USA (HERE) - 2019 Quarter 4
+Result=1
+[{6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdStartCopy-0]
+Result=1
+[Application]
+Name=Data Installation
+Version=1.00.000
+Company=Caliper Corporation
+Lang=0409
+[{6CC5AE57-B5F9-499D-AF7A-CAFA86872961}-SdFinish-0]
+Result=1
+bOpt1=0
+bOpt2=0
