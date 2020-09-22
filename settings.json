@@ -1,0 +1,13 @@
+{
+    "version": "2020.0.4720",
+    "registration": {
+        "user": "Dr. Peter Venkman",
+        "company": "UNT CAS",
+        "email": "pvenkman@donotreply.unt.edu"
+    },
+    "licenses": {
+        "DESKTOP-4KCEKD1": "ABC-123-DEF-456-GHI",
+        "DESKTOP-7E10E0D": "ABC-123-DEF-567-GHI",
+        "DESKTOP-1DA6976": "ABC-123-DEF-678-GHI"
+    }
+}
