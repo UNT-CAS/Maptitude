@@ -5,3 +5,6 @@ Details about this repo [can be found on my blog](https://blog.vertigion.com/202
 
  I don’t include the install binaries or the PSADT files.
  You’ll have to get those from Caliper or PSADT respectively.
+
+Obviously, the registration details, computer names, and serial numbers in the `settings.json` are fake.
+The `settings.json` file serves to illustrate how I set mine up for production.
