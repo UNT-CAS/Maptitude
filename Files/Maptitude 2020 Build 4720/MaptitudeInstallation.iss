@@ -1,0 +1,57 @@
+[InstallShield Silent]
+Version=v7.00
+File=Response File
+[File Transfer]
+OverwrittenReadOnly=NoToAll
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-DlgOrder]
+Dlg0={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdWelcome-0
+Count=10
+Dlg1={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-AskOptions-0
+Dlg2={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdLicense-0
+Dlg3={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdAskDestPath-0
+Dlg4={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdAskDestPath-1
+Dlg5={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdComponentDialog2-0
+Dlg6={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdShowDlgEdit3-0
+Dlg7={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdShowDlgEdit1-0
+Dlg8={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdShowInfoList-0
+Dlg9={1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdFinish-0
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdWelcome-0]
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-AskOptions-0]
+Result=1
+Sel-0=0
+Sel-1=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdLicense-0]
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdAskDestPath-0]
+szDir=C:\Program Files\Maptitude 2020
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdAskDestPath-1]
+szDir=C:\Users\Public\Documents\ccdata
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdComponentDialog2-0]
+Component-type=string
+Component-count=3
+Component-0=Program Files
+Component-1=Datum Conversion Files
+Component-2=Maptitude Map Data
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdShowDlgEdit3-0]
+szEdit1=%USER%
+szEdit2=%COMPANY%
+szEdit3=%EMAIL%
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdShowDlgEdit1-0]
+szEdit1=%LICENSE%
+Result=1
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdShowInfoList-0]
+Result=1
+[Application]
+Name=Maptitude
+Version=2020
+Company=Caliper Corporation
+Lang=0409
+[{1AC9AF81-4426-11D7-BD59-0002B34B98FF}-SdFinish-0]
+Result=1
+bOpt1=0
+bOpt2=0
