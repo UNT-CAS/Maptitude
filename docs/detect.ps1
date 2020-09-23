@@ -43,15 +43,17 @@ $foundData = $false
     }
 }
 
+# Is Maptitude installed? Is it the correct version?
 if (-not $foundMaptitude) {
     Throw [System.Management.Automation.ItemNotFoundException] "Either '${displayNameMaptitude}' or the correct version '${versionMaptitude}' was not found."
 }
 
+# Is Data installed?
 if (-not $foundData) {
     Throw [System.Management.Automation.ItemNotFoundException] "${displayNameData} was not found."
 }
 
-# Validate licensing worked.
+# Is the License valid?
 $installDir = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\').'Installed In'
 Add-Type -Path "$installDir\ActivateLicense\InstantActivator.dll"
 [com.caliper.softwarekey.InstantActivator] $InstantActivator = New-Object -TypeName 'com.caliper.softwarekey.InstantActivator'
@@ -59,6 +61,20 @@ Add-Type -Path "$installDir\ActivateLicense\InstantActivator.dll"
 $InstantActivator.Start() | Out-Null
 if (($InstantActivator.KeyStatus -ne 'SSCP_ACTIVATED') -or (-not $InstantActivator.KeyHasSerialNumber)) {
     Throw "Licensing Failed: KeyStatus $($InstantActivator.KeyStatus); KeyHasSerialNumber $($InstantActivator.KeyHasSerialNumber)"
+}
+
+# Does Default Users's AppData have some files?
+[IO.DirectoryInfo] $defaultProfile = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList').Default
+[IO.DirectoryInfo] $defaultAppData = '{0}\AppData\Roaming' -f $defaultProfile.FullName
+if (-not (Get-ChildItem ('{0}\Caliper\Maptitude 2020' -f $defaultAppData.FullName))) {
+    Throw [System.Management.Automation.ItemNotFoundException] "Default Users's AppData files were not found."
+}
+
+# Is the shortcut removed from the All User's Desktop?
+[IO.DirectoryInfo] $publicDesktop = [System.Environment]::GetFolderPath('CommonDesktopDirectory')
+if (Get-ChildItem ('{0}\Maptitude *.lnk' -f $publicDesktop)) {
+    # This is like a double negative ItenNotFound ... :D
+    Throw [System.Management.Automation.ItemNotFoundException] "Maptitude Desktop shortcut should not have been found."
 }
 
 # For successful "Application Installed" detection, need STDOUT and EXIT 0
