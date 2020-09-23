@@ -105,8 +105,9 @@ if (($InstantActivator.KeyStatus -ne 'SSCP_ACTIVATED') -or (-not $InstantActivat
 # Setup Default Profile
 #   Turn off Registration Prompt
 #   Turn off Software Updates
-[IO.DirectoryInfo] $publicAppData = '{0}\AppData\Roaming' -f (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList').Default
-Expand-Archive "$PSScriptRoot\Files\AppData.zip" -DestinationPath ('{0}\Caliper\Maptitude 2020' -f $publicAppData) -Force
+[IO.DirectoryInfo] $defaultProfile = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList').Default
+[IO.DirectoryInfo] $defaultAppData = '{0}\AppData\Roaming' -f $defaultProfile.FullName
+Expand-Archive "$PSScriptRoot\Files\AppData.zip" -DestinationPath ('{0}\Caliper\Maptitude 2020' -f $defaultAppData) -Force
 
 # Delete Icon From AllUser's Desktop
 [IO.DirectoryInfo] $publicDesktop = [System.Environment]::GetFolderPath('CommonDesktopDirectory')
