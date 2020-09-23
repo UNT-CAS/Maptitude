@@ -11,8 +11,8 @@ I really only cared about the following two files:
 - `softwarereg.arr`: gets created if check the "Don't show this message again" when prompted for *Online Registration*.
 
 Unfortunately, the `softwarereg.arr` doesn't appear to affect the application's first run.
-Hopefully, Caliper can improve this.
-
-I went ahead and took the entire AppData folder because something it it allowed the `checkupdate.arr` to work.
+I went ahead and took the entire AppData folder because something in it allowed the `checkupdate.arr` to work.
+Without the rest of the AppData folder, `checkupdate.arr` wouldn't have worked either.
 
 I would really prefer a registry setting under HKLM somewhere for both of these.
+Hopefully, Caliper can improve this.
