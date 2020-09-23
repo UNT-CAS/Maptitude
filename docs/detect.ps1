@@ -73,7 +73,7 @@ if (-not (Get-ChildItem ('{0}\Caliper\Maptitude 2020' -f $defaultAppData.FullNam
 # Is the shortcut removed from the All User's Desktop?
 [IO.DirectoryInfo] $publicDesktop = [System.Environment]::GetFolderPath('CommonDesktopDirectory')
 if (Get-ChildItem ('{0}\Maptitude *.lnk' -f $publicDesktop)) {
-    # This is like a double negative ItenNotFound ... :D
+    # This is like a double negative ItemNotFound ... :D
     Throw [System.Management.Automation.ItemNotFoundException] "Maptitude Desktop shortcut should not have been found."
 }
 
