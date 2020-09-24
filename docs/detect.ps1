@@ -25,20 +25,16 @@ $foundData = $false
                 [IO.FileInfo] $mapt = '{0}\mapt.exe' -f $regValues.InstallLocation
                 if (([version] $mapt.VersionInfo.ProductVersion) -eq $versionMaptitude) {
                     $foundMaptitude = $true
-                    
-                    if ($foundMaptitude -band $foundData) {
-                        break Uninstalls
-                    }
                 }
             }
             
             $displayNameData {
                 $foundData = $true
-                
-                if ($foundMaptitude -band $foundData) {
-                    break Uninstalls
-                }
             }
+        }
+                
+        if ($foundMaptitude -band $foundData) {
+            break Uninstalls
         }
     }
 }
@@ -70,11 +66,13 @@ if (-not (Get-ChildItem ('{0}\Caliper\Maptitude 2020' -f $defaultAppData.FullNam
     Throw [System.Management.Automation.ItemNotFoundException] "Default Users's AppData files were not found."
 }
 
+# Choosing to not run detection on each User Profile.
+
 # Is the shortcut removed from the All User's Desktop?
 [IO.DirectoryInfo] $publicDesktop = [System.Environment]::GetFolderPath('CommonDesktopDirectory')
 if (Get-ChildItem ('{0}\Maptitude *.lnk' -f $publicDesktop)) {
     # This is like a double negative ItemNotFound ... :D
-    Throw [System.Management.Automation.ItemNotFoundException] "Maptitude Desktop shortcut should not have been found."
+    Throw [System.Management.Automation.ItemNotFoundException] "Maptitude Desktop shortcut should not have been found, but it was."
 }
 
 # For successful "Application Installed" detection, need STDOUT and EXIT 0
