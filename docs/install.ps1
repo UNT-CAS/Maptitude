@@ -70,8 +70,8 @@ if ($result.ExitCode) {
 # The answer file won't work for the licensing.
 # Adding to registry.
 $regKeys = @(
-    'HKLM:\SOFTWARE\Caliper Corporation\Maptitude\2020\',
-    'HKLM:\SOFTWARE\WOW6432Node\Caliper Corporation\Maptitude\2020\'
+    'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\',
+    'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Caliper Corporation\Maptitude\2020\'
 )
 
 foreach ($regKey in $regKeys) {
@@ -81,7 +81,6 @@ foreach ($regKey in $regKeys) {
 $installDir = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\').'Installed In'
 
 # Run the silent license activation
-#   Seems to always Exits 0, so just run now and confirm later.
 $instantActivatorApp = @{
     FilePath = "$installDir\ActivateLicense\InstantActivatorApp.exe"
     Wait = $true
@@ -89,7 +88,9 @@ $instantActivatorApp = @{
 }
 $result = Start-Process @instantActivatorApp
 
-if ($result.ExitCode) {
+if ($result.ExitCode -eq 1) {
+    Throw "Error with activation; Serial Number may already be in use."
+} elseif ($result.ExitCode) {
     Throw "Process exited with unexpected code: $($result.ExitCode)"
 }
 
@@ -107,7 +108,57 @@ if (($InstantActivator.KeyStatus -ne 'SSCP_ACTIVATED') -or (-not $InstantActivat
 #   Turn off Software Updates
 [IO.DirectoryInfo] $defaultProfile = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList').Default
 [IO.DirectoryInfo] $defaultAppData = '{0}\AppData\Roaming' -f $defaultProfile.FullName
-Expand-Archive "$PSScriptRoot\Files\AppData.zip" -DestinationPath ('{0}\Caliper\Maptitude 2020' -f $defaultAppData) -Force
+Expand-Archive "$PSScriptRoot\Files\AppData.zip" -DestinationPath ('{0}\Caliper\Maptitude 2020' -f $defaultAppData.FullName) -Force
+
+# Setup each User Profiles
+$userProfiles = Get-ChildItem 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'
+foreach ($userProfile in $userProfiles) {
+    $userSid = $userProfile.PSChildName   
+    if (-not $userSid.StartsWith('S-1-5-21-')) {
+        # Skip System Users and Services
+        continue
+    }
+
+    $userDomain, $userName = (New-Object System.Security.Principal.SecurityIdentifier($userSid)).Translate([System.Security.Principal.NTAccount]).Value.Split('\')
+
+    try {
+        $userShellFolders = Get-Item ('Registry::HKEY_USERS\{0}\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' -f $userSid) -ErrorAction Stop
+        $userEnvironment = Get-Item ('Registry::HKEY_USERS\{0}\Environment' -f $userSid) -ErrorAction Stop
+    } catch [System.Management.Automation.ItemNotFoundException] {
+        # Not a full/real User Profile
+        # Likely was cerated using RunAs
+        continue
+    }
+
+    $userAppData = $userShellFolders.GetValue('AppData', '', 'DoNotExpandEnvironmentNames')
+
+    # Build the user environment based on the target User and System Environments
+    [hashtable] $userEnv = @{}
+
+    foreach ($var in (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment').PSObject.Properties) {
+        if (@('PSPath','PSParentPath','PSChildName','PSProvider') -notcontains $var.Name) {
+            $userEnv.Set_Item(('%{0}%' -f $var.Name), $userEnvironment.GetValue($var.Name, '', 'DoNotExpandEnvironmentNames'))
+        }
+    }
+
+    foreach ($var in $userEnvironment.PSObject.Properties) {
+        if (@('PSPath','PSParentPath','PSChildName','PSProvider') -contains $var.Name) {
+            $userEnv.Set_Item(('%{0}%' -f $var.Name), $var.Value)
+        }
+    }
+
+    $userEnv.Set_Item('%USERDOMAIN%', $userDomain)
+    $userEnv.Set_Item('%USERNAME%', $userName)
+    $userEnv.Set_Item('%USERPROFILE%', (Get-ItemProperty $userProfile.PSPath).ProfileImagePath)
+
+    # Expand Env Strings
+    $regexes = $userEnv.Keys | ForEach-Object {[System.Text.RegularExpressions.Regex]::Escape($_)}
+    $regex = [regex]('(?i)' + ($regexes -join '|')) # (?i) makes it case-insensitive
+    $userAppData = $regex.Replace($userAppData, { $userEnv[$args[0].Value] })
+
+    # Expand Archive
+    Expand-Archive "$PSScriptRoot\Files\AppData.zip" -DestinationPath ('{0}\Caliper\Maptitude 2020' -f $userAppData) -Force
+}
 
 # Delete Icon From AllUser's Desktop
 [IO.DirectoryInfo] $publicDesktop = [System.Environment]::GetFolderPath('CommonDesktopDirectory')
