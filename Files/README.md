@@ -2,7 +2,7 @@ This folder should also include the `AppData.zip`.
 
 # Contents of `AppData.zip`
 
-- Collected From: `%AppData%\Caliper\Maptitude 2020\"`
+- Collected From: `%AppData%\Caliper\Maptitude 2020\`
 - Extracted To: `C:\Users\Default\AppData\Roaming\Caliper\Maptitude 2020\`
 
 I really only cared about the following two files:
