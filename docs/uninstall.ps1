@@ -105,7 +105,6 @@ if ($uninstallStringMaptitude) { # If nothing found, likely not installed.
 
 
 # Remove AppData from Default Profile
-
 [IO.DirectoryInfo] $defaultProfile = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList').Default
 [IO.DirectoryInfo] $defaultAppData = '{0}\AppData\Roaming' -f $defaultProfile.FullName
 [IO.DirectoryInfo] $defaultMaptitudeAppData = '{0}\Caliper\Maptitude 2020' -f $defaultAppData.FullName
