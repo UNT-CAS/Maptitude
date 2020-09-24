@@ -9,6 +9,12 @@ $displayNameMaptitude = 'Maptitude 2020 (64-bit)'
 [version] $versionMaptitude = '2020.0.4720'
 $displayNameData = 'Maptitude Data for USA (HERE) - 2019 Quarter 4'
 
+# Is Access DB Engine installed?
+if (-not (Get-CimInstance Win32_Product -Filter 'IdentifyingNumber = "{90160000-00D1-0409-1000-0000000FF1CE}"')) {
+    Throw [System.Management.Automation.ItemNotFoundException] "Microsoft Access database engine 2016 (English) v16.0.4519.1000 was not found."
+}
+
+# Look for Maptitude
 $regUninstallKeys = @(
     'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
     'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
