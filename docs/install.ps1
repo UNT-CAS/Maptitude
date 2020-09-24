@@ -33,6 +33,39 @@ $issSetupContent = $issSetupContent -replace ('(szEdit\d)=%EMAIL%', ('$1={0}' -f
 $issSetupContent | Out-File -FilePath $issSetup.FullName -Force
 $issSetup.Refresh()
 
+# Install Visual C++ Redist
+foreach ($exe in @('vc100redist_x86.exe', 'vcredist_x64.exe', 'vcredist_x86.exe')) {
+    $installAccessDBEngine = @{
+        FilePath = "$PSScriptRoot\Files\MsSetup\$exe"
+        ArgumentList = @(
+            '/Q'
+        )
+        Wait = $true
+        PassThru = $true
+    }
+    $result = Start-Process @installAccessDBEngine
+    
+    if ($result.ExitCode) {
+        Throw "Process exited with unexpected code: $($result.ExitCode)"
+    }
+}
+
+# Install Access DB Engine
+$installAccessDBEngine = @{
+    FilePath = "$PSScriptRoot\Files\MsSetup\AccessDatabaseEngine_X64.exe"
+    ArgumentList = @(
+        '/quiet',
+        '/norestart'
+    )
+    Wait = $true
+    PassThru = $true
+}
+$result = Start-Process @installAccessDBEngine
+
+if ($result.ExitCode) {
+    Throw "Process exited with unexpected code: $($result.ExitCode)"
+}
+
 # Install Maptitude
 $installMaptitudeInstallation = @{
     FilePath = "$PSScriptRoot\Files\Maptitude 2020 Build 4720\MaptitudeInstallation.exe"
