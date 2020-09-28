@@ -10,10 +10,8 @@ $displayNameMaptitude = 'Maptitude 2020 (64-bit)'
 $displayNameData = 'Maptitude Data for USA (HERE) - 2019 Quarter 4'
 
 # Fastest thing we can do to check if it's installed.
-$installDir = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\' -ErrorAction Ignore).'Installed In'
-if (-not $installDir) {
-    Throw [System.Management.Automation.ItemNotFoundException] "Registry key for '${displayNameMaptitude}' install dir was not found."
-}
+#    If not found, will error.
+$installDir = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\').'Installed In'
 
 # Look for Maptitude
 $regUninstallKeys = @(
