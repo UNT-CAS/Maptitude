@@ -9,9 +9,10 @@ $displayNameMaptitude = 'Maptitude 2020 (64-bit)'
 [version] $versionMaptitude = '2020.0.4720'
 $displayNameData = 'Maptitude Data for USA (HERE) - 2019 Quarter 4'
 
-# Is Access DB Engine installed?
-if (-not (Get-CimInstance Win32_Product -Filter 'IdentifyingNumber = "{90160000-00D1-0409-1000-0000000FF1CE}"')) {
-    Throw [System.Management.Automation.ItemNotFoundException] "Microsoft Access database engine 2016 (English) v16.0.4519.1000 was not found."
+# Fastest thing we can do to check if it's installed.
+$installDir = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\' -ErrorAction Ignore).'Installed In'
+if (-not $installDir) {
+    Throw [System.Management.Automation.ItemNotFoundException] "Registry key for '${displayNameMaptitude}' install dir was not found."
 }
 
 # Look for Maptitude
@@ -55,8 +56,12 @@ if (-not $foundData) {
     Throw [System.Management.Automation.ItemNotFoundException] "${displayNameData} was not found."
 }
 
+# Is Access DB Engine installed?
+if (-not (Get-CimInstance Win32_Product -Filter 'IdentifyingNumber = "{90160000-00D1-0409-1000-0000000FF1CE}"')) {
+    Throw [System.Management.Automation.ItemNotFoundException] "Microsoft Access database engine 2016 (English) v16.0.4519.1000 was not found."
+}
+
 # Is the License valid?
-$installDir = (Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Caliper Corporation\Maptitude\2020\').'Installed In'
 Add-Type -Path "$installDir\ActivateLicense\InstantActivator.dll"
 [com.caliper.softwarekey.InstantActivator] $InstantActivator = New-Object -TypeName 'com.caliper.softwarekey.InstantActivator'
 
